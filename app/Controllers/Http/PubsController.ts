@@ -1,9 +1,12 @@
 import { HttpContextContract } from "@ioc:Adonis/Core/HttpContext"
 import { schema, rules } from "@ioc:Adonis/Core/Validator"
-import Pub from "App/Models/Pub"
+
+import Pub, { Location } from "App/Models/Pub"
 
 export default class PubsController {
-  public async index({}: HttpContextContract) {}
+  public async index({}: HttpContextContract) {
+    return Pub.all()
+  }
 
   public async store({ request }: HttpContextContract) {
     const newStoreSchema = schema.create({
@@ -14,7 +17,7 @@ export default class PubsController {
       ]),
       password: schema.string({}, [rules.confirmed("passwordConfirmation")]),
       description: schema.string.optional(),
-      coordinates: schema.object.optional().members({
+      location: schema.object.optional().members({
         latitude: schema.number(),
         longitude: schema.number(),
       }),
@@ -26,11 +29,50 @@ export default class PubsController {
     return Pub.create(payload)
   }
 
-  public async upload({}: HttpContextContract) {}
+  public async upload({ request, params }: HttpContextContract) {
+    const uploadSchema = schema.create({
+      cover: schema.file(),
+      logo: schema.file(),
+    })
+    const payload = await request.validate({ schema: uploadSchema })
+
+    const cover = payload.cover
+    const logo = payload.logo
+
+    await cover?.moveToDisk("./")
+    await logo?.moveToDisk("./")
+
+    const pub = (await Pub.find(params.id)) as Pub
+    pub.cover = cover?.fileName as string
+    pub.logo = logo?.fileName as string
+    return pub.save()
+  }
+
+  public async update({ request, params }: HttpContextContract) {
+    const updateStoreSchema = schema.create({
+      name: schema.string.optional({ trim: true }),
+      password: schema.string.optional(),
+      description: schema.string.optional(),
+      location: schema.object.optional().members({
+        latitude: schema.number(),
+        longitude: schema.number(),
+      }),
+      city: schema.string.optional(),
+      country: schema.string.optional(),
+    })
+
+    const payload = await request.validate({ schema: updateStoreSchema })
+    const pub = (await Pub.find(params.id)) as Pub
+    pub.name = payload.name as string
+    pub.password = payload.password as string
+    pub.description = payload.description as string
+    pub.location = payload.location as Location
+    pub.city = payload.city as string
+    pub.country = payload.country as string
+    return await pub.save()
+  }
 
   public async show({}: HttpContextContract) {}
-
-  public async update({}: HttpContextContract) {}
 
   public async destroy({}: HttpContextContract) {}
 }

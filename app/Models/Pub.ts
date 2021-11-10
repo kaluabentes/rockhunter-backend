@@ -2,6 +2,11 @@ import { DateTime } from "luxon"
 import { BaseModel, column, beforeSave } from "@ioc:Adonis/Lucid/Orm"
 import Hash from "@ioc:Adonis/Core/Hash"
 
+export interface Location {
+  longitude: number
+  latitude: number
+}
+
 export default class Pub extends BaseModel {
   @column({ isPrimary: true })
   public id: number
@@ -25,7 +30,7 @@ export default class Pub extends BaseModel {
   public description: string
 
   @column()
-  public coordinates: object
+  public location: Location
 
   @column()
   public city: string

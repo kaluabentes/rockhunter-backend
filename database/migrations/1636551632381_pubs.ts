@@ -13,7 +13,7 @@ export default class Pubs extends BaseSchema {
       table.string("logo")
       table.string("cover")
       table.text("description")
-      table.json("coordinates")
+      table.json("location")
       table.string("country")
       table.string("city")
 
