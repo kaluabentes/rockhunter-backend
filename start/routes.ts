@@ -28,6 +28,7 @@ Route.delete("/api/v1/pubs/:id", "PubsController.destroy")
 Route.post("/api/v1/pubs/:id/upload", "PubsController.upload")
 Route.post("/api/v1/pubs/login", "PubsController.login")
 
+Route.get("/api/v1/events", "EventsController.index")
 Route.post("/api/v1/events", "EventsController.store").middleware("pubAuth")
 Route.post("/api/v1/events/:id", "EventsController.upload").middleware(
   "pubAuth"

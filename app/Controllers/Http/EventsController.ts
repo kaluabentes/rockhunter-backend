@@ -3,7 +3,9 @@ import { schema, rules } from "@ioc:Adonis/Core/Validator"
 import Event from "App/Models/Event"
 
 export default class EventsController {
-  public async index({}: HttpContextContract) {}
+  public async index({}: HttpContextContract) {
+    return Event.all()
+  }
 
   public async store({ request }: HttpContextContract) {
     const createEventSchema = schema.create({
