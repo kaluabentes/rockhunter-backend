@@ -20,6 +20,10 @@
 
 import Route from "@ioc:Adonis/Core/Route"
 
-Route.resource("/api/v1/pubs", "PubsController").apiOnly()
+Route.get("/api/v1/pubs", "PubsController.index")
+Route.post("/api/v1/pubs", "PubsController.store")
+Route.get("/api/v1/pubs/:id", "PubsController.show")
+Route.patch("/api/v1/pubs/:id", "PubsController.update").middleware("pubAuth")
+Route.delete("/api/v1/pubs/:id", "PubsController.destroy")
 Route.post("/api/v1/pubs/:id/upload", "PubsController.upload")
 Route.post("/api/v1/pubs/login", "PubsController.login")
