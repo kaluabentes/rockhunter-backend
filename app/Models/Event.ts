@@ -6,8 +6,8 @@ export default class Event extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 
-  @hasOne(() => Pub)
-  public pub: HasOne<typeof Pub>
+  @column()
+  public pub_id: number
 
   @column()
   public name: string
@@ -21,8 +21,8 @@ export default class Event extends BaseModel {
   @column()
   public schedule: string
 
-  @column.dateTime()
-  public date: DateTime
+  @column()
+  public date: string
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

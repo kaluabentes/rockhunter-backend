@@ -12,7 +12,7 @@ export default class Events extends BaseSchema {
         .references("pubs.id")
         .onDelete("CASCADE")
       table.string("name")
-      table.string("description")
+      table.text("description")
       table.string("flyer")
       table.string("schedule")
       table.date("date")
