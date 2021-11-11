@@ -1,6 +1,13 @@
 import { DateTime } from "luxon"
-import { BaseModel, column, beforeSave } from "@ioc:Adonis/Lucid/Orm"
+import {
+  BaseModel,
+  column,
+  beforeSave,
+  hasMany,
+  HasMany,
+} from "@ioc:Adonis/Lucid/Orm"
 import Hash from "@ioc:Adonis/Core/Hash"
+import Event from "./Event"
 
 export interface Location {
   longitude: number
@@ -10,6 +17,9 @@ export interface Location {
 export default class Pub extends BaseModel {
   @column({ isPrimary: true })
   public id: number
+
+  @hasMany(() => Event)
+  public events: HasMany<typeof Event>
 
   @column()
   public name: string
