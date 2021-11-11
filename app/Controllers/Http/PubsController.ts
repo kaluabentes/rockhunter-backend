@@ -1,5 +1,8 @@
 import { HttpContextContract } from "@ioc:Adonis/Core/HttpContext"
 import { schema, rules } from "@ioc:Adonis/Core/Validator"
+import Hash from "@ioc:Adonis/Core/Hash"
+import Env from "@ioc:Adonis/Core/Env"
+import jwt from "jsonwebtoken"
 
 import Pub, { Location } from "App/Models/Pub"
 
@@ -75,4 +78,28 @@ export default class PubsController {
   public async show({}: HttpContextContract) {}
 
   public async destroy({}: HttpContextContract) {}
+
+  public async login({ request, response }: HttpContextContract) {
+    const loginSchema = schema.create({
+      email: schema.string({}, [
+        rules.email(),
+        rules.exists({ table: "pubs", column: "email" }),
+      ]),
+      password: schema.string(),
+    })
+    const { email, password } = await request.validate({ schema: loginSchema })
+    const pub = (await Pub.findBy("email", email)) as Pub
+
+    if (!(await Hash.verify(pub.password, password))) {
+      return response.badRequest("Invalid credentials")
+    }
+
+    return jwt.sign(
+      {
+        sub: pub.id,
+        type: "pub",
+      },
+      Env.get("JWT_SECRET")
+    )
+  }
 }

@@ -22,3 +22,4 @@ import Route from "@ioc:Adonis/Core/Route"
 
 Route.resource("/api/v1/pubs", "PubsController").apiOnly()
 Route.post("/api/v1/pubs/:id/upload", "PubsController.upload")
+Route.post("/api/v1/pubs/login", "PubsController.login")
