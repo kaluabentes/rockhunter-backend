@@ -33,3 +33,10 @@ Route.post("/api/v1/events", "EventsController.store").middleware("pubAuth")
 Route.post("/api/v1/events/:id", "EventsController.upload").middleware(
   "pubAuth"
 )
+Route.get("/api/v1/events/:id", "EventsController.show")
+Route.patch("/api/v1/events/:id", "EventsController.update").middleware(
+  "pubAuth"
+)
+Route.delete("/api/v1/events/:id", "EventsController.destroy").middleware(
+  "pubAuth"
+)

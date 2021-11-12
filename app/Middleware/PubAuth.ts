@@ -23,7 +23,10 @@ export default class PubAuth {
         return
       }
 
-      request.pub = payload
+      request.pub = {
+        id: payload.sub,
+        name: payload.name,
+      }
     } catch (error) {
       response.unauthorized(error.message)
       return

@@ -97,6 +97,7 @@ export default class PubsController {
     return jwt.sign(
       {
         sub: pub.id,
+        name: pub.name,
         type: "pub",
       },
       Env.get("JWT_SECRET")

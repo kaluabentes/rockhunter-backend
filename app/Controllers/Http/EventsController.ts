@@ -23,7 +23,7 @@ export default class EventsController {
 
     return await Event.create({
       ...payload,
-      pub_id: request.pub.sub,
+      pub_id: request.pub.id,
     })
   }
 
@@ -40,9 +40,35 @@ export default class EventsController {
     return await event?.save()
   }
 
-  public async show({}: HttpContextContract) {}
+  public async show({ params }: HttpContextContract) {
+    return Event.find(params.id)
+  }
 
-  public async update({}: HttpContextContract) {}
+  public async update({ request, params }: HttpContextContract) {
+    const updateEventSchema = schema.create({
+      name: schema.string.optional(),
+      description: schema.string.optional(),
+      schedule: schema.string.optional(),
+      date: schema.string.optional({}, [
+        rules.regex(/[0-9]{4}-[0-9]{2}-[0-9]{2}/),
+      ]),
+    })
+    const payload = await request.validate({ schema: updateEventSchema })
+    const event = (await Event.query()
+      .where("id", params.id)
+      .where("pub_id", request.pub.id)
+      .first()) as Event
+    event.name = payload.name as string
+    event.description = payload.description as string
+    event.schedule = payload.schedule as string
+    event.date = payload.date as string
 
-  public async destroy({}: HttpContextContract) {}
+    return await event.save()
+  }
+
+  public async destroy({ params }: HttpContextContract) {
+    const event = await Event.find(params.id)
+    await event?.delete()
+    return "Event deleted"
+  }
 }
