@@ -3,10 +3,14 @@ import {
   BaseModel,
   column,
   beforeSave,
+  afterFind,
+  afterFetch,
   hasMany,
   HasMany,
 } from "@ioc:Adonis/Lucid/Orm"
 import Hash from "@ioc:Adonis/Core/Hash"
+import Drive from "@ioc:Adonis/Core/Drive"
+
 import Event from "./Event"
 
 export interface Location {

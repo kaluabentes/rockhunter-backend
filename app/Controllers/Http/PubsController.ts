@@ -7,7 +7,13 @@ import jwt from "jsonwebtoken"
 import Pub, { Location } from "App/Models/Pub"
 
 export default class PubsController {
-  public async index({}: HttpContextContract) {
+  public async index({ request }: HttpContextContract) {
+    const { city, country } = request.qs()
+
+    if (city && country) {
+      return Pub.query().where("city", city).where("country", country)
+    }
+
     return Pub.all()
   }
 
@@ -24,8 +30,8 @@ export default class PubsController {
         latitude: schema.number(),
         longitude: schema.number(),
       }),
-      city: schema.string.optional(),
-      country: schema.string.optional(),
+      city: schema.string(),
+      country: schema.string(),
     })
     const payload = await request.validate({ schema: newStoreSchema })
 
@@ -63,7 +69,6 @@ export default class PubsController {
       city: schema.string.optional(),
       country: schema.string.optional(),
     })
-
     const payload = await request.validate({ schema: updateStoreSchema })
     const pub = (await Pub.find(params.id)) as Pub
     pub.name = payload.name as string
